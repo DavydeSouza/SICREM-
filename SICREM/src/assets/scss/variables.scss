@@ -1,0 +1,63 @@
+$main-color: #2a2a2e;
+$main-color-darker: #1f1f21;
+$main-color-hover: #161618;
+
+$form-box-bg-color: #fff;
+$components-area-color: #eeeef1;
+
+$danger-color: #dc6363;
+$danger-color-hover: #b35353;
+$danger-color-darker: #B04E4E;
+
+$error-color-feedback: #dc3545;
+$error-color-feedback-shadow: #dc354640;
+$default-color: #f3f7fc;
+$success-color: #3367d6;
+$success-color-hover: #2c58b6;
+$inputs-color: #f3f7fc;
+$selected-item-color: #17a2b8;
+$selected-item-color-hover: #2b8694;
+
+$font-color: #4f5c6b;
+$font-color-btn: #ffffff;
+$font-color-white: $form-box-bg-color;
+$font-family: "Roboto", Condensed, sans-serif;
+
+$font-size: 1rem;
+$font-size-small: .830rem;
+$font-size-input: .875rem;
+$font-size-placeholder: .875rem;
+$font-size-mid-big: .985rem;
+$font-size-big: 1.4rem;
+
+$font-weight-default-bolder: 700;
+$font-weight-default-bold: 600;
+$font-weight-placeholder-bolder: 400;
+$font-weight-input-bolder: 400;
+$font-weight-labels: 400;
+
+$form-row-default-height: 95px;
+$form-row-default-height-labelless: 70px;
+
+$border-radius: 4px;
+$height-btn-default: 38px;
+$padding-default-input: 0px 5px;
+
+$default-border: 1px solid #ced4da;
+$invalid-field-border: 1px solid $error-color-feedback;
+
+//Buttons
+$font-weight-buttons: 300;
+$font-size-button: $font-size;
+$width-default-button: 150px;
+$height-default-button: 45px;
+$btn-primary-color: $success-color;
+$btn-primary-color-hover: $success-color-hover;
+$btn-secondary-color: #01253f;
+$btn-secondary-color-hover: #021827;
+$btn-tertiary-color: #9c9c9c;
+$btn-tertiary-color-hover: #818181;
+$btn-disabled-color: #e6e6e6;
+
+// Inputs
+$input-height-default: 50px;

@@ -1,0 +1,147 @@
+pipeline {
+	agent { label 'vagrant-docker-slave' }
+	options { skipDefaultCheckout() }
+	environment {
+		DOCKER_HUB_LG = credentials('DOCKER_HUB_RUDS_LG')
+    DOCKER_HUB_PWD = credentials('DOCKER_HUB_RUDS_PWD')
+	}
+	stages {
+		stage("Checkout SCM Manually"){
+			steps{
+				checkout scm
+			}
+		}
+
+		stage("Copy apropiate Dockerfile"){
+			steps{
+				sh("cp Dockerfiles/${env.BRANCH_NAME}/Dockerfile .")
+			}
+		}
+
+		stage('Deliver for pipe') {
+			when { branch 'pipe' }
+			stages {
+				stage("Build image and run container") {
+					steps {
+						sh '''
+							sudo docker build -t ${DOCKER_HUB_LG}/sicrem-api-pipe .
+						'''
+						sh '''
+							if [ "$(sudo docker ps -aq -f name=sicrem-api)" ]; then
+								sudo docker rm sicrem-api -f
+							fi &&\
+							sudo docker run -p 4400:4400 -d --name sicrem-api --network sicrem_network ${DOCKER_HUB_LG}/sicrem-api-dev
+						'''
+					}
+				}
+			}
+		}
+
+		stage('Deliver for develop') {
+			when { branch 'develop' }
+			stages {
+				stage("Build image and run container") {
+					steps {
+						sh '''
+							sudo docker build -t ${DOCKER_HUB_LG}/sicrem-api-dev .
+						'''
+						sh '''
+							if [ "$(sudo docker ps -aq -f name=sicrem-api)" ]; then
+								sudo docker rm sicrem-api -f
+							fi &&\
+							sudo docker run -p 4400:4400 -d --name sicrem-api --network sicrem_network ${DOCKER_HUB_LG}/sicrem-api-dev
+						'''
+					}
+				}
+			}
+		}
+
+		stage('Deliver for homolog') {
+			when { branch 'homolog' }
+			stages {
+
+				stage("Build image") {
+					steps {
+						sh '''
+							sudo docker build -t ${DOCKER_HUB_LG}/sicrem-api-homolog:${BUILD_NUMBER} .
+						'''
+					}
+				}
+
+				stage("Upload to docker.hub") {
+					steps {
+						sh '''
+							echo ${DOCKER_HUB_PWD} | sudo docker login --username ${DOCKER_HUB_LG} --password-stdin
+						'''
+						sh '''
+							sudo docker push ${DOCKER_HUB_LG}/sicrem-api-homolog:${BUILD_NUMBER}
+						'''
+					}
+				}
+
+				stage("Deploy on Locaweb VPS - RUDS") {
+					agent { label 'vps-locaweb-slave' }
+					steps {
+						sh '''
+							sudo docker login --username ${DOCKER_HUB_LG} --password ${DOCKER_HUB_PWD}
+						'''
+						sh '''
+							sudo docker image pull ${DOCKER_HUB_LG}/sicrem-api-homolog:${BUILD_NUMBER}
+						'''
+						sh '''
+						if [ "$(sudo docker ps -aq -f name=sicrem-api)" ]; then
+								sudo docker rm sicrem-api -f
+							fi &&\
+							sudo docker run -p:4400:4400 -d --name sicrem-api --network sicrem_network ${DOCKER_HUB_LG}/sicrem-api-homolog:${BUILD_NUMBER}
+						'''
+					}
+				}
+
+			}
+		}
+
+		stage('Deliver for prod') {
+			when { branch 'prod' }
+			stages {
+
+				stage("Build image") {
+					steps {
+						sh '''
+							sudo docker build -t ${DOCKER_HUB_LG}/sicrem-api-prod:${BUILD_NUMBER} .
+						'''
+					}
+				}
+
+				stage("Upload to docker.hub") {
+					steps {
+						sh '''
+							echo ${DOCKER_HUB_PWD} | sudo docker login --username ${DOCKER_HUB_LG} --password-stdin
+						'''
+						sh '''
+							sudo docker push ${DOCKER_HUB_LG}/sicrem-api-prod:${BUILD_NUMBER}
+						'''
+					}
+				}
+
+				stage("Deploy on Locaweb VPS - SICREM") {
+					agent { label 'sicrem_prod' }
+					steps {
+						sh '''
+							echo ${DOCKER_HUB_PWD} | docker login --username ${DOCKER_HUB_LG} --password-stdin
+						'''
+						sh '''
+							docker image pull ${DOCKER_HUB_LG}/sicrem-api-prod:${BUILD_NUMBER}
+						'''
+						sh '''
+						if [ "$(docker ps -aq -f name=sicrem-api)" ]; then
+								docker rm sicrem-api -f
+							fi &&\
+							docker run -p:4400:4400 -d --name sicrem-api --network sicrem_network ${DOCKER_HUB_LG}/sicrem-api-prod:${BUILD_NUMBER}
+						'''
+					}
+				}
+
+			}
+		}
+	}
+}

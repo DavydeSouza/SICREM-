@@ -1,0 +1,105 @@
+@mixin inputs-textareas  {
+	font-family: $font-family;
+	font-weight: $font-weight-placeholder-bolder;
+	font-size: $font-size-input;
+	color: $font-color;
+	border: none;
+	outline: none;
+	background-color: transparent;
+
+	&::placeholder {
+		font-weight: $font-weight-placeholder-bolder;
+		font-size: $font-size-input;
+		color: $font-color;
+	}
+
+	&::-webkit-input-placeholder {
+		font-weight: $font-weight-placeholder-bolder;
+		font-size: $font-size-input;
+		color: $font-color;
+	}
+}
+
+@mixin vue-select  {
+	> * .v-select {
+		background-color: transparent;
+		width: 100%;
+		input {
+			&.vs__search{
+				font-family: $font-family;
+				font-weight: $font-weight-placeholder-bolder;
+				font-size: $font-size-mid-big;
+				color: $font-color;
+
+				&::-webkit-input-placeholder {
+					color: $font-color;
+					font-family: $font-family;
+					font-size: $font-size-placeholder;
+					font-weight: $font-weight-placeholder-bolder;
+				}
+			}
+		}
+		.vs__dropdown-toggle {
+			background-color: white;
+			border: $default-border;
+			align-items: center;
+			outline: none;
+			padding: 2px 12px;
+			.vs__selected-options {
+				display: flex;
+				align-items: center;
+    		flex-wrap: wrap;
+				gap: 5px;
+				position: relative;
+				bottom: 1px;
+				span {
+					position: relative;
+					top: 2px;
+				}
+				input {
+					height: $input-height-default - 6px;
+				}
+				.vs__search{
+					margin: 0;
+				}
+				.vs__selected {
+					background-color: $selected-item-color;
+					padding: 5px 5px;
+					margin: 0;
+					border: none;
+					font-size: $font-size-small;
+					color: $font-color-btn;
+					font-weight: $font-weight-placeholder-bolder;
+					text-align: center;
+					text-transform: uppercase;
+					user-select: none;
+					cursor: default;
+					&:hover {
+						background-color: $selected-item-color-hover;
+					}
+				}
+				.vs__deselect {
+					width: 20px;
+					padding-left: 5px;
+					svg {
+						filter: invert(27%) sepia(95%) saturate(2878%)
+						hue-rotate(346deg) brightness(120%) contrast(95%);
+					}
+				}
+			}
+			.vs__actions {
+				cursor: pointer;
+				& > * {
+					background-color: transparent;
+				}
+			}
+		}
+	}
+	> * .invalid-field {
+		.v-select {
+			.vs__dropdown-toggle {
+				border: $invalid-field-border;
+			}
+		}
+	}
+}

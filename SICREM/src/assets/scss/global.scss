@@ -1,0 +1,188 @@
+@import 'node_modules/bootstrap/scss/bootstrap.scss';
+
+@import './mixins/inputs_selects_mixin';
+@import './mixins/btn-custom_mixin';
+
+#main-container {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+	position: fixed;
+	font-family: $font-family;
+	font-size: $font-size;
+	color: $font-color;
+	#components-area-component {
+		background-color: white;
+		flex-grow: 0;
+		width: 100%;
+		#components-content {
+			width: 100%;
+			height: 100%;
+			align-content: center;
+			padding: 5px;
+			#main {
+				width: 100%;
+				height: 100%;
+				overflow-x: auto;
+			}
+		}
+	}
+}
+
+main {
+	@include vue-select;
+	width: 100%;
+	height: 100%;
+	.component-root {
+		width: 100%;
+		.content {
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+			row-gap: 10px;
+			> .row {
+				justify-content: center;
+				margin: 0;
+			}
+			button, span {
+				@include btn-custom;
+			}
+		}
+	}
+	.form-container {
+		width: 100%;
+		height: 100%;
+		form {
+			&.register {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				.form-row {
+					&:not(.actions) {
+						width: 100%;
+					}
+					.form-group {
+						label {
+							font-size: 14px;
+							margin-bottom: 0;
+							padding-left: 1px;
+							overflow: hidden;
+							&.no-break-label {
+								width: inherit;
+								display: inline-block;
+								white-space: nowrap;
+								text-overflow: ellipsis;
+							}
+						}
+						> input {
+							height: $input-height-default;
+						}
+					}
+				}
+			}
+
+			.form-row {
+				.form-group {
+					$heigthErrorMsgDiv: 20px;
+					$marginNoError: calc(20px + 0.5rem);
+					$marginError: calc(0px + 0.5rem);
+
+					margin-bottom: $marginNoError;
+					&.swith-content{
+						display: flex;
+						align-items: flex-end;
+						column-gap: 5px;
+					}
+					&.select-container {
+						padding: 0px 5px;
+						&.invalid-field {
+							input {
+								border: none;
+								&:focus {
+									box-shadow: none;
+								}
+							}
+							.multiselect {
+								border: solid 1px $error-color-feedback;
+								&:focus {
+									box-shadow: 0 0 0 0.2rem $error-color-feedback-shadow;
+								}
+							}
+						}
+					}
+					&.invalid-field {
+						margin-bottom: $marginError;
+						input {
+							border: solid 1px $error-color-feedback;
+							&:focus {
+								box-shadow: 0 0 0 0.2rem $error-color-feedback-shadow;
+							}
+						}
+						.error-messages {
+							color: $error-color-feedback;
+							span {
+								height: 15px;
+								font-size: $font-size-small;
+							}
+						}
+					}
+					.error-messages {
+						height: $heigthErrorMsgDiv;
+					}
+					.info-messages {
+						color: $success-color;
+						span {
+							font-size: $font-size-small;
+						}
+					}
+				}
+				.buttons-container {
+					height: fit-content;
+					display: flex;
+					gap: 20px;
+					button {
+						color: $font-color-btn;
+						&:focus {
+							box-shadow: none;
+						}
+						&.remove-item {
+							&:hover {
+								background-color: $danger-color;
+								color:white;
+							}
+						}
+						&.add-item {
+							&:hover {
+								background-color: $btn-secondary-color;
+								color:white;
+							}
+						}
+					}
+				}
+			}
+			.actions {
+				width: 95%;
+				padding: 0;
+				margin: 15px 0;
+				display: flex;
+				justify-content: space-between;
+			}
+		}
+		button, span {
+			@include btn-custom;
+		}
+	}
+	.multiselect {
+		min-height: $input-height-default;
+		border: $default-border;
+		background-color: white;
+		border-radius: $border-radius;
+		.multiselect__tags {
+			border: none;
+			background: transparent;
+			font-family: $font-family;
+			color: $font-color;
+		}
+	}
+}

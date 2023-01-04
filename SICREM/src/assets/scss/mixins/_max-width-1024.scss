@@ -1,0 +1,23 @@
+@mixin max-width-1024 {
+	.form-container {
+		.form-row {
+			&:nth-child(1) {
+				.form-group {
+					max-width: 50%;
+					flex-basis: 50%;
+				}
+			}
+			.form-group {
+				&.swith-content {
+					min-width: 100%;
+					justify-content: flex-start;
+					> label {
+						&:first-child {
+							width: 170px;
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,21 @@
+{
+    "nome": "Homolog enviroment (Dockerized)",
+    "url": "http://191.252.222.156:4400",
+		"via_cep": "http://viacep.com.br/ws/",
+		"SYSTEM_NAME": "SICREM",
+    "SYSTEM_URL": "http://191.252.222.156:8181",
+		"SENDGRID_API_KEY":"",
+		"SENDGRID_SENDER": "",
+		"postgres": {
+			"host": "191.252.222.156",
+			"database" : "sicrem_homolog",
+			"username" : "postgres",
+			"password" : "1234",
+			"port": 5432
+		},
+    "jwt": {
+        "salt_key": "^@B1g%|M4C*",
+        "time_expires_token": "24h"
+    },
+    "port": 4400
+}

@@ -1,0 +1,22 @@
+const router = require('express').Router()
+const auth = require('../../../_config/authentication')
+const controller = require('../controllers')
+
+router.post('/login/', controller.authenticate)
+router.get('/home', auth.authorize([global.levels.administrador, global.levels.cbesUsuario, global.levels.cliente]), controller.home)
+router.get('/qtd', auth.authorize([global.levels.administrador, global.levels.cbesUsuario]), controller.qtd)
+router.post('/pswd', controller.changePswd)
+router.post('/', auth.authorize([global.levels.administrador, global.levels.cbesUsuario]), controller.create)
+router.put('/:id', auth.authorize([global.levels.administrador, global.levels.cbesUsuario]), controller.update)
+router.put('/inactive/:id', auth.authorize([global.levels.administrador, global.levels.cbesUsuario]), controller.inative)
+router.put('/active/:id', auth.authorize([global.levels.administrador]), controller.activate)
+router.delete('/:id', auth.authorize([global.levels.administrador]), controller.delete)
+router.get('/client', auth.authorize([global.levels.administrador, global.levels.cbesUsuario]), controller.getClient)
+router.get('/clients', auth.authorize([global.levels.administrador, global.levels.cbesUsuario]), controller.getClients)
+router.get('/name/:name', auth.authorize([global.levels.administrador]), controller.getByName)
+router.get('/:id', auth.authorize([global.levels.administrador, global.levels.cbesUsuario, global.levels.marinha]), controller.getById)
+router.get('/edit/:id', auth.authorize([global.levels.administrador, global.levels.cbesUsuario, global.levels.marinha]), controller.getToEditById)
+router.get('/edit/cbes/:id', auth.authorize([global.levels.administrador, global.levels.cbesUsuario, global.levels.marinha]), controller.getToEditByCebsId)
+router.get('/', auth.authorize([global.levels.administrador]), controller.getAll)
+
+module.exports = router

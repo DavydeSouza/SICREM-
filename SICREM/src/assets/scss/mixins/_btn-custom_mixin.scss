@@ -1,0 +1,75 @@
+@mixin btn-custom  {
+	&.btn-custom {
+		width: $width-default-button;
+		height: $height-default-button;
+		border-radius: $border-radius;
+		border: none;
+		color: $font-color-white;
+		font-family: $font-family;
+		font-size: $font-size;
+		font-weight: $font-weight-buttons;
+		text-transform: uppercase;
+		cursor: pointer;
+		&.small {
+			width: 26px;
+			height: 26px;
+			border-radius: 5px;
+			justify-content: center;
+			align-items: center;
+			display: flex;
+			a,
+			i {
+				color: #fff;
+				font-weight: $font-weight-default-bolder;
+				font-size: $font-size-small;
+				text-decoration: none;
+				&.disabled {
+					cursor: default;
+					pointer-events: none;
+					opacity: 0.6;
+				}
+			}
+		}
+		&:focus {
+			outline: none;
+			box-shadow: none;
+		}
+		&.main-action {
+			background-color: $selected-item-color;
+			&:hover {
+				background-color: $selected-item-color-hover
+			}
+		}
+		&.primary {
+			background-color: $btn-primary-color;
+			&:hover {
+				background-color: $btn-primary-color-hover
+			}
+		}
+		&.secondary {
+			background-color: $btn-secondary-color;
+			&:hover {
+				background-color: $btn-secondary-color-hover
+			}
+		}
+		&.tertiary {
+			background-color: $btn-tertiary-color;
+			&:hover {
+				background-color: $btn-tertiary-color-hover
+			}
+		}
+		&.dangery {
+			background-color: $danger-color;
+			&:hover {
+				background-color: $danger-color-darker
+			}
+		}
+		&:disabled, &.disabled {
+			background-color: lightgray;
+			cursor: default;
+			&:hover{
+				background-color: lightgray;
+			}
+		}
+	}
+}

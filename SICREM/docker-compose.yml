@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  sicrem:
+		image:
+    container_name: sicrem-front
+    build: .
+      volumes:
+        -.:/app
+      working_dir: /app
+      port:
+        - 8181:8181
+      restart: always
+      command: ['npm', 'run', 'dev']

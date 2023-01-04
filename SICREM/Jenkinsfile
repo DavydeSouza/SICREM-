@@ -1,0 +1,139 @@
+pipeline {
+	agent { label 'vagrant-docker-slave' }
+	options { skipDefaultCheckout() }
+	environment {
+		DOCKER_HUB_LG = credentials('DOCKER_HUB_RUDS_LG')
+    DOCKER_HUB_PWD = credentials('DOCKER_HUB_RUDS_PWD')
+		APP_NAME="sicrem-front"
+	}
+	stages {
+		stage("Checkout SCM Manually"){
+			steps{
+				checkout scm
+			}
+		}
+
+		stage("Copy apropiate Dockerfile "){
+			steps{
+				sh("cp Dockerfiles/${env.BRANCH_NAME}/Dockerfile .")
+			}
+		}
+
+		stage('Deliver for pipe') {
+			when { branch 'pipe' }
+			stages {
+				stage("Build image and run container") {
+					steps {
+						sh("sudo docker build -t ${DOCKER_HUB_LG}/${APP_NAME}-pipe --build-arg BRANCH_NAME=${env.BRANCH_NAME} .")
+						sh '''
+							if [ "$(sudo docker ps -aq -f name=${APP_NAME})" ]; then
+								sudo docker rm ${APP_NAME} -f
+							fi &&\
+							sudo docker run -p 8181:8181 -d --name ${APP_NAME} --network sicrem_network ${DOCKER_HUB_LG}/${APP_NAME}-pipe
+						'''
+					}
+				}
+			}
+		}
+
+		stage('Deliver for Develop') {
+			when { branch 'develop' }
+			stages {
+				stage("Build image and run container") {
+					steps {
+						sh("sudo docker build -t ${DOCKER_HUB_LG}/${APP_NAME}-dev --build-arg BRANCH_NAME=${env.BRANCH_NAME} .")
+						sh '''
+							if [ "$(sudo docker ps -aq -f name=${APP_NAME})" ]; then
+								sudo docker rm ${APP_NAME} -f
+							fi &&\
+							sudo docker run -p 8181:8181 -d --name ${APP_NAME} --network sicrem_network ${DOCKER_HUB_LG}/${APP_NAME}-dev
+						'''
+					}
+				}
+			}
+		}
+
+		stage('Deliver for homolog') {
+			when { branch 'homolog' }
+			stages {
+
+				stage("Build image") {
+					steps {
+						sh("sudo docker build -t ${DOCKER_HUB_LG}/${APP_NAME}-homolog:${BUILD_NUMBER} --build-arg BRANCH_NAME=${env.BRANCH_NAME} .")
+					}
+				}
+
+				stage("Upload to docker.hub") {
+					steps {
+						sh '''
+							echo ${DOCKER_HUB_PWD} | sudo docker login --username ${DOCKER_HUB_LG} --password-stdin
+						'''
+						sh '''
+							sudo docker push ${DOCKER_HUB_LG}/${APP_NAME}-homolog:${BUILD_NUMBER}
+						'''
+					}
+				}
+
+				stage("Deploy on Locaweb VPS - RUDS") {
+					agent { label 'vps-locaweb-slave' }
+					steps {
+						sh '''
+							echo ${DOCKER_HUB_PWD} | sudo docker login --username ${DOCKER_HUB_LG} --password-stdin
+						'''
+						sh '''
+							sudo docker image pull ${DOCKER_HUB_LG}/${APP_NAME}-homolog:${BUILD_NUMBER}
+						'''
+						sh '''
+						if [ "$(sudo docker ps -aq -f name=${APP_NAME})" ]; then
+								sudo docker rm ${APP_NAME} -f
+							fi &&\
+							sudo docker run -p:8181:8181 -d --name ${APP_NAME} --network sicrem_network ${DOCKER_HUB_LG}/${APP_NAME}-homolog:${BUILD_NUMBER}
+						'''
+					}
+				}
+
+			}
+		}
+
+		stage('Deliver for prod') {
+			when { branch 'prod' }
+			stages {
+
+				stage("Build image") {
+					steps {
+						sh("sudo docker build -t ${DOCKER_HUB_LG}/${APP_NAME}-prod:${BUILD_NUMBER} --build-arg BRANCH_NAME=${env.BRANCH_NAME} .")
+					}
+				}
+
+				stage("Upload to docker.hub") {
+					steps {
+						sh '''
+							echo ${DOCKER_HUB_PWD} | sudo docker login --username ${DOCKER_HUB_LG} --password-stdin
+						'''
+						sh '''
+							sudo docker push ${DOCKER_HUB_LG}/${APP_NAME}-prod:${BUILD_NUMBER}
+						'''
+					}
+				}
+
+				stage("Deploy on Locaweb VPS - SICREM") {
+					agent { label 'sicrem_prod' }
+					steps {
+						sh '''
+							echo ${DOCKER_HUB_PWD} | docker login --username ${DOCKER_HUB_LG} --password-stdin
+						'''
+						sh '''
+							docker image pull ${DOCKER_HUB_LG}/${APP_NAME}-prod:${BUILD_NUMBER}
+						'''
+						sh '''
+						if [ "$(docker ps -aq -f name=${APP_NAME})" ]; then
+								docker rm ${APP_NAME} -f
+							fi &&\
+							docker run -p:8181:8181 -d --name ${APP_NAME} --network sicrem_network ${DOCKER_HUB_LG}/${APP_NAME}-prod:${BUILD_NUMBER}
+						'''
+					}
+				}
+			}
+		}
+	}
+}

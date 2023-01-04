@@ -1,0 +1,27 @@
+@mixin notification-custom {
+	.notification-custom {
+		margin: 5px;
+		padding: 10px;
+		border-left: 5px solid;
+		font-size: 16px;
+		color: $font-color-btn;
+
+		// .notification-title {	}
+
+		// .notification-content { }
+
+		&.success {
+			background: $success-color;
+			border-left-color: $success-color-hover;
+		}
+		&.info {
+			background: $selected-item-color;
+			border-left-color: $selected-item-color-hover;
+		 }
+		&.error {
+			background: $danger-color;
+			border-left-color: $danger-color-darker;
+		 }
+	}
+}
+

@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0af8d8"],{"0f8d":function(e,n,t){"use strict";t.r(n);var a=function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("router-view")},r=[],c={name:"Ships",title:"Embarcações"},s=c,u=t("2877"),i=Object(u["a"])(s,a,r,!1,null,"3a29b058",null);n["default"]=i.exports}}]);
+//# sourceMappingURL=chunk-2d0af8d8.399f4d48.js.map

@@ -1,0 +1,21 @@
+{
+    "nome": "Develop enviroment",
+    "url": "http://localhost:7000",
+		"via_cep": "http://viacep.com.br/ws/",
+		"SYSTEM_NAME": "SICREM",
+    "SYSTEM_URL": "http://localhost:8081",
+		"SENDGRID_API_KEY":"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",
+		"SENDGRID_SENDER": "ruds.devel@gmail.com",
+		"postgres": {
+			"host": "localhost",
+			"database" : "sicrem_dev",
+			"username" : "postgres",
+			"password" : "24528412",
+			"port": 5432
+		},
+    "jwt": {
+        "salt_key": "^@B1g%|M4C*",
+        "time_expires_token": "24h"
+    },
+    "port": 7000
+}

@@ -1,0 +1,21 @@
+{
+	"nome": "Ambiente Desenvolvimento Docker",
+	"url": "http://192.168.33.12:4400",
+	"via_cep": "http://viacep.com.br/ws/",
+	"SYSTEM_NAME": "SICREM",
+	"SYSTEM_URL": "http://192.168.33.12:8080",
+	"SENDGRID_API_KEY":"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",
+	"SENDGRID_SENDER": "ruds.devel@gmail.com",
+	"postgres": {
+		"host": "192.168.33.12",
+		"database" : "sicrem_dev",
+		"username" : "postgres",
+		"password" : "1234",
+		"port": 5432
+	},
+	"jwt": {
+			"salt_key": "^@B1g%|M4C*",
+			"time_expires_token": "24h"
+	},
+	"port": 4400
+}
